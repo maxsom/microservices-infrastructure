@@ -1,4 +1,0 @@
-export MESOS_NATIVE_JAVA_LIBRARY={{ spark_mesos_lib }}
-export SPARK_EXECUTOR_URI="file://{{ spark_install_dir }}/spark-{{ spark_version }}-bin-hadoop{{ hadoop_version }}.tgz" 
-export MASTER="mesos://zk://{{ zookeeper_master }}:2181/mesos"
-export PATH=$PATH:{{ spark_install_dir }}/spark-{{ spark_version }}-bin-hadoop{{ hadoop_version }}/bin

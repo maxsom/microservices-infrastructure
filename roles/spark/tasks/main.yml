@@ -15,38 +15,26 @@
   tags:
     - spark
 
-- name: Download Spark binary
+- name: Download Spark binaries
   sudo: true 
   get_url: 
-    url: "http://mirror.ox.ac.uk/sites/rsync.apache.org/spark/spark-{{ spark_version }}/spark-{{ spark_version }}-bin-hadoop{{ hadoop_version }}.tgz"
-    dest: "{{ spark_install_dir }}/spark-{{ spark_version }}-bin-hadoop{{ hadoop_version }}.tgz"
-  register: spark_downloaded
+    url: "http://mirror.ox.ac.uk/sites/rsync.apache.org/spark/spark-{{ item }}/spark-{{ item }}-bin-hadoop{{ item < '1.3.1' and '2.4' or '2.6' }}.tgz"
+    dest: "{{ spark_install_dir }}/spark-{{ item }}-bin-hadoop{{ item < '1.3.1' and '2.4' or '2.6' }}.tgz"
+  with_items: spark_versions
   tags:
     - spark 
+
+- name: Check whether hdfs user exists or not
+  shell: "getent passwd hdfs >/dev/null 2>&1 && echo 'True' || echo 'False'"
+  register: hdfs_exists
 
 - name: Create Spark user home directory on HDFS
   run_once: true
   sudo_user: hdfs
   sudo: true
   shell: source /etc/profile.d/hadoop.sh; if ! hdfs dfs -test -d /user/{{ spark_user }}; then hdfs dfs -mkdir -p /user/{{ spark_user }}; fi; hdfs dfs -chown {{ spark_user }} /user/{{ spark_user }}
+  when: hdfs_exists.stdout == 'True'
   tags:
     - spark
-
-# for future use
-
-#- name: Create Spark directory on HDFS
-#  run_once: true
-#  sudo_user: hdfs
-#  sudo: true
-#  shell: source /etc/profile.d/hadoop.sh; if ! hdfs dfs -test -d {{ spark_hdfs_dir }}; then hdfs dfs -mkdir -p {{ spark_hdfs_dir }}; fi; hdfs dfs -chown {{ spark_user }} {{ spark_hdfs_dir }}
-#  tags:
-#    - spark
-
-#- name: Copy Spark binary to HDFS
-#  run_once: true
-#  shell: source /etc/profile.d/hadoop.sh; if ! hdfs dfs -test -e {{ spark_hdfs_dir }}/spark-{{ spark_version }}-bin-hadoop{{ hadoop_version }}.tgz; then hdfs dfs -put {{ spark_install_dir }}/spark-{{ spark_version }}-bin-hadoop{{ hadoop_version }}.tgz {{ spark_hdfs_dir }}/spark-{{ spark_version }}-bin-hadoop{{ hadoop_version }}.tgz; fi; hdfs dfs -chown {{ spark_user }} {{ spark_hdfs_dir }}/spark-{{ spark_version }}-bin-hadoop{{ hadoop_version }}.tgz
-#  when: spark_downloaded|changed
-#  tags:
-#    - spark         
 
 - include: client.yml

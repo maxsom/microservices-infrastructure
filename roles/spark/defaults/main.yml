@@ -1,8 +1,7 @@
 ---
-hadoop_version: "2.6"
-spark_version: "1.3.1"
+spark_versions: ["1.2.1", "1.2.2", "1.3.0", "1.3.1"]
+spark_default_version: "1.3.0"
 spark_user: "centos"
 spark_install_dir: "/usr/local/share/spark"
-spark_hdfs_dir: "/apps/spark"
 spark_mesos_lib: "/usr/local/lib/libmesos.so"
 zookeeper_master: "zookeeper.service.consul"

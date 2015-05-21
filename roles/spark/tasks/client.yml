@@ -1,26 +1,35 @@
 ---
-- name: Setup Spark binary
+- name: Unarchive Spark binaries
   sudo: true
   unarchive:
-    src: "{{ spark_install_dir }}/spark-{{ spark_version }}-bin-hadoop{{ hadoop_version }}.tgz"
+    src: "{{ spark_install_dir }}/spark-{{ item }}-bin-hadoop{{ item < '1.3.1' and '2.4' or '2.6' }}.tgz"
     dest: "{{ spark_install_dir }}"
     copy: no
+  with_items: spark_versions
   tags:
     - spark
 
-- name: Setup Spark environment
-  sudo: true
-  template:
-    src: "spark.sh.j2"
-    dest: "/etc/profile.d/spark.sh"
-  tags:
-    - spark
-
-- name: Create Spark configuration
+- name: Create Spark configurations
   sudo: true
   template:
     src: "spark-defaults.conf.j2"
-    dest: "{{ spark_install_dir }}/spark-{{ spark_version }}-bin-hadoop{{ hadoop_version }}/conf/spark-defaults.conf"
+    dest: "{{ spark_install_dir }}/spark-{{ item }}-bin-hadoop{{ item < '1.3.1' and '2.4' or '2.6' }}/conf/spark-defaults.conf"
+  with_items: spark_versions
   tags:
     - spark
 
+- name: Create Spark environment scripts
+  sudo: true
+  template:
+    src: "spark-env.sh.j2"
+    dest: "{{ spark_install_dir }}/spark-{{ item }}-bin-hadoop{{ item < '1.3.1' and '2.4' or '2.6' }}/conf/spark-env.sh"
+    mode: 0775
+  with_items: spark_versions
+  tags:
+    - spark
+
+- name: Setup default Spark environment
+  sudo: true
+  command: cp {{ spark_install_dir }}/spark-{{ spark_default_version }}-bin-hadoop{{ spark_default_version < '1.3.1' and '2.4' or '2.6' }}/conf/spark-env.sh /etc/profile.d/spark-env.sh
+  tags:
+    - spark
