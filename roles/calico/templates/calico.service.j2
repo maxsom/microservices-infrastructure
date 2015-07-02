@@ -1,0 +1,20 @@
+[Unit]
+Description=calico
+After=docker.service etcd.service
+Requires=docker.service etcd.service
+
+[Service]
+Type=forking
+RemainAfterExit=yes
+Restart=on-failure
+RestartSec=20
+TimeoutStartSec=20m
+
+ExecStartPre=-/usr/bin/docker kill calico-node
+ExecStartPre=-/usr/bin/docker rm calico-node
+ExecStart=/usr/bin/calicoctl node --ip={{ ansible_default_ipv4.address }}
+
+ExecStop=/usr/bin/calicoctl node stop
+
+[Install]
+WantedBy=multi-user.target

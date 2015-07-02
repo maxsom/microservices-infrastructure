@@ -1,0 +1,21 @@
+---
+- name: generate systemd unit file
+  template:
+    src: etcd.service.j2
+    dest: /usr/lib/systemd/system/etcd.service
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - reload systemd
+    - restart etcd
+  tags:
+    - etcd
+
+- name: enable and start etcd
+  service:
+    name: etcd
+    enabled: yes
+    state: started
+  tags:
+    - etcd

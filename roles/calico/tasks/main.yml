@@ -1,0 +1,89 @@
+---
+# Ansible modprobe module doesn't provide such functionality
+- name: add kernel modules to load at boot time
+  copy:
+    src: calico-modules.conf
+    dest: /etc/modules-load.d/calico-modules.conf
+    owner: root
+    group: root
+    mode: 0644
+  tags:
+    - calico
+
+- name: load kernel module xt_set
+  modprobe:
+    name: xt_set
+    state: present
+  tags:
+    - calico
+
+- name: enable kernel packet forwarding
+  sysctl:
+    name: net.ipv4.ip_forward
+    value: 1
+    state: present
+    reload: yes
+  tags:
+    - calico
+
+- name: download calico binary
+  get_url:
+    url: http://projectcalico.org/latest/calicoctl
+    dest: /usr/bin
+    mode: 0755
+  tags:
+    - calico
+
+- name: generate systemd unit file
+  template:
+    src: calico.service.j2
+    dest: /usr/lib/systemd/system/calico.service
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - reload systemd
+    - restart calico
+  tags:
+    - calico
+
+# Before running this task make sure the OS_* variables have been sourced on your Ansible host
+- name: unlock neutron ports to allow calico traffic
+  shell: roles/calico/files/neutron_port_update.py "{{ calico_network }}" "{{ hostvars[item].ansible_default_ipv4.macaddress }}"
+  environment:
+    OS_USERNAME: "{{ lookup('env','OS_USERNAME') }}"
+    OS_PASSWORD: "{{ lookup('env','OS_PASSWORD') }}"
+    OS_TENANT_NAME: "{{ lookup('env','OS_TENANT_NAME') }}"
+    OS_AUTH_URL: "{{ lookup('env','OS_AUTH_URL') }}"
+  register: exit_code
+  changed_when: exit_code.rc == 2
+  failed_when: exit_code.rc == 1
+  delegate_to: localhost
+  run_once: True
+  with_items: groups['all']
+  tags:
+    - calico
+
+- name: enable and start calico
+  service:
+    name: calico
+    enabled: yes
+    state: started
+  tags:
+    - calico
+
+- name: check if calico profile exists
+  shell: calicoctl profile show|grep -w "{{ calico_profile }}"
+  register: command_result
+  changed_when: False
+  failed_when: command_result.stderr
+  run_once: True
+  tags:
+    - calico
+
+- name: create calico profile
+  shell: calicoctl profile add "{{ calico_profile }}"
+  when: command_result.stdout == ""
+  run_once: True
+  tags:
+    - calico
