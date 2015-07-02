@@ -15,6 +15,7 @@ variable subnet_cidr { default = "10.10.10.0/24" }
 variable ip_version { default = "4" }
 variable short_name { default = "mi" }
 variable long_name { default = "microservices-infrastructure" }
+variable ssh_user { default = "cloud-user" }
 
 provider "openstack" {
   auth_url	= "${ var.auth_url }"
@@ -33,6 +34,7 @@ resource "openstack_compute_instance_v2" "control" {
   metadata              = {
                             dc = "${var.datacenter}"
                             role = "control"
+                            ssh_user = "${ var.ssh_user }"
                           }
   count                 = "${ var.control_count }"
 }
@@ -48,6 +50,7 @@ resource "openstack_compute_instance_v2" "resource" {
   metadata              = {
                             dc = "${var.datacenter}"
                             role = "worker"
+                            ssh_user = "${ var.ssh_user }"
                           }
   count                 = "${ var.resource_count }"
 }
