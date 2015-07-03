@@ -17,17 +17,18 @@ ExecStart=/usr/bin/docker run \
     --publish={{ etcd_client_port }}:{{ etcd_client_port }} \
     --publish={{ etcd_peer_port }}:{{ etcd_peer_port }} \
     {{ etcd_image }}:{{ etcd_image_tag }} \
-    --initial-cluster-state new \
-    --initial-advertise-peer-urls http://{{ inventory_hostname }}:{{ etcd_peer_port }} \
-    --advertise-client-urls http://{{ inventory_hostname }}:{{ etcd_client_port }} \
     --name {{ inventory_hostname }} \
+    --listen-peer-urls http://0.0.0.0:{{ etcd_peer_port }} \
+    --listen-client-urls http://0.0.0.0:{{ etcd_client_port }} \
+    --initial-advertise-peer-urls http://{{ inventory_hostname }}:{{ etcd_peer_port }} \
+    --initial-cluster-state new \
+    --advertise-client-urls http://{{ inventory_hostname }}:{{ etcd_client_port }} \
     --initial-cluster {% for item in groups['all'] -%}
                         {% if item != 'localhost' -%}
                           {{ hostvars[item].inventory_hostname }}=http://{{ hostvars[item].inventory_hostname }}:{{ etcd_peer_port }}
+                          {%- if not loop.last %},{% endif -%}
                         {%- endif -%}
-                        {%- if not loop.last %},{% endif -%}
                       {% endfor %}
-
 
 ExecStop=/usr/bin/docker stop etcd
 
