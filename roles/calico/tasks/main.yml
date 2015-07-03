@@ -60,6 +60,7 @@
   failed_when: exit_code.rc == 1
   delegate_to: localhost
   run_once: True
+  when: hostvars[item].ansible_default_ipv4.address is defined
   with_items: groups['all']
   tags:
     - calico
