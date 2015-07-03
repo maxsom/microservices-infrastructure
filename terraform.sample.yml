@@ -37,9 +37,9 @@
     - logrotate
     - consul-template
     - docker
-    - logstash
     - etcd
     - calico
+    - logstash
     - nginx
     - consul
     - dnsmasq
