@@ -37,7 +37,7 @@
 - name: set etcd environment variable
   template:
     src: etcd.j2
-    dest: /etc/sysconfig/etcd
+    dest: /etc/sysconfig/calico-etcd
     owner: root
     group: root
     mode: 0644
