@@ -12,7 +12,7 @@ http {
 	keepalive_timeout	65;
 
 	server {
-		listen {% raw %}{{ env "NGINX_PUBLIC_IP" }}{% endraw %}:8500 {% if do_consul_ssl|bool %}ssl{% endif %};
+		listen {{ consul_nginx_public_ip }}:8500 {% if do_consul_ssl|bool %}ssl{% endif %};
 
 {% if do_consul_ssl|bool %}
 		ssl_certificate		/etc/nginx/ssl/nginx.cert;
