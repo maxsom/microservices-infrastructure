@@ -1,4 +1,4 @@
 ---
 calico_etcdaddr: 127.0.0.1:4001
 calico_network: 192.168.0.0/16  # default network set by Calico
-calico_profile: microservices
+calico_profile: dev 
