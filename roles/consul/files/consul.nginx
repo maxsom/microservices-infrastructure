@@ -12,7 +12,7 @@ http {
 	keepalive_timeout	65;
 
 	server {
-		listen {{ consul_nginx_public_ip }}:8500 ssl;
+		listen {{ env "NGINX_PUBLIC_IP" }}:8500 ssl;
 
 		ssl_certificate		/etc/nginx/ssl/nginx.cert;
 		ssl_certificate_key	/etc/nginx/ssl/nginx.key;
