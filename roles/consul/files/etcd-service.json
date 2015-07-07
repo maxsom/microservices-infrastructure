@@ -1,0 +1,9 @@
+{ 
+  "service": {
+    "name": "etcd",
+    "check": {
+      "script": "/usr/local/bin/check-service-active etcd",
+      "interval": "15s"
+    }
+  }
+}

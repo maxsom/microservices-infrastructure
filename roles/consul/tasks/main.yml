@@ -42,6 +42,17 @@
   tags:
     - consul
 
+- name: register etcd with consul
+  sudo: yes 
+  copy:
+    src: etcd-service.json
+    dest: /etc/consul
+  notify:
+    - reload consul
+  tags:
+    - consul
+    - etcd
+
 - name: deploy tls files
   sudo: yes
   copy:
