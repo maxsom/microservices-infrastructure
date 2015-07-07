@@ -92,18 +92,19 @@
   tags:
     - calico
 
-- name: check if calico profile exists
+- name: check if calico profile already exists
   shell: calicoctl profile show|grep -w "{{ calico_profile }}"
-  register: command_result
+  register: check_result
   changed_when: False
-  failed_when: command_result.stderr
+  failed_when: check_result.stderr
   run_once: True
   tags:
     - calico
 
 - name: create calico profile
   shell: calicoctl profile add "{{ calico_profile }}"
-  when: command_result.stdout == ""
+  when: check_result.stdout == ""
+  register: create_result
   run_once: True
   tags:
     - calico
@@ -114,5 +115,6 @@
   changed_when: False
   failed_when: command_result.stdout == ""
   run_once: True
+  when: create_result is not skipped
   tags:
     - calico
