@@ -85,6 +85,13 @@
   tags:
     - calico
 
+- name: add calico ip-ip pool if required
+  shell: calicoctl pool add "{{ calico_network }}" --ipip --nat-outgoing
+  run_once: True
+  when: provider == 'openstack'
+  tags:
+    - calico
+
 - name: check if calico profile exists
   shell: calicoctl profile show|grep -w "{{ calico_profile }}"
   register: command_result
