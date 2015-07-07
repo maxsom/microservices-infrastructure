@@ -104,7 +104,6 @@
 - name: create calico profile
   shell: calicoctl profile add "{{ calico_profile }}"
   when: check_result.stdout == ""
-  register: create_result
   run_once: True
   tags:
     - calico
@@ -115,6 +114,5 @@
   changed_when: False
   failed_when: command_result.stdout == ""
   run_once: True
-  when: create_result is not skipped
   tags:
     - calico
