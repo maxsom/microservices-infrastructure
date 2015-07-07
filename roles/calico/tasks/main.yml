@@ -72,7 +72,7 @@
   failed_when: exit_code.rc == 1
   delegate_to: localhost
   run_once: True
-  when: hostvars[item].ansible_default_ipv4.address is defined
+  when: hostvars[item].ansible_default_ipv4.address is defined and provider == 'openstack'
   with_items: groups['all']
   tags:
     - calico
@@ -88,7 +88,7 @@
 - name: add calico ip-ip pool if required
   shell: calicoctl pool add "{{ calico_network }}" --ipip --nat-outgoing
   run_once: True
-  when: provider == 'openstack'
+  when: provider != 'openstack'
   tags:
     - calico
 
