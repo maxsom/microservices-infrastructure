@@ -128,7 +128,7 @@
   sudo: yes
   copy:
     src: docker.conf
-    dest: /etc/systemd/system/mesos-slave.d/docker.conf
+    dest: /etc/systemd/system/mesos-slave.service.d/docker.conf
   notify:
     - reload systemd
     - restart mesos follower
