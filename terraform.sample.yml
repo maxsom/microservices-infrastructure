@@ -38,7 +38,6 @@
     - consul-template
     - docker
     - etcd
-    - calico
     - logstash
     - nginx
     - consul
@@ -58,10 +57,12 @@
   # role=worker hosts are a subset of "all". Since we already gathered facts on
   # all servers, we can skip it here to speed up the deployment.
   gather_facts: no
+  sudo: yes
   vars:
     consul_dns_domain: consul
     mesos_mode: follower
   roles:
+    - calico
     - mesos
     - haproxy
 
