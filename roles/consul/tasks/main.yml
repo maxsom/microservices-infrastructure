@@ -43,7 +43,7 @@
     - consul
 
 - name: register etcd with consul
-  sudo: yes 
+  sudo: yes
   copy:
     src: etcd-service.json
     dest: /etc/consul
