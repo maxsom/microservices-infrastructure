@@ -1,4 +1,7 @@
 ---
+calico_image: calico/node
+calico_image_tag: v0.4.8
+
 calico_etcdaddr: 127.0.0.1:4001
 
 # Containers will be assigned IPs from this network range
