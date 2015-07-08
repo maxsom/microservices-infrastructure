@@ -115,31 +115,22 @@
     - mesos
     - collectd
 
-- name: configure mesos docker client env for networking integration
-  sudo: yes
-  lineinfile:
-    dest: /etc/sysconfig/mesos-slave
-    line: DOCKER_HOST=localhost:2377
-    state: present
-    create: yes 
-  notify: restart mesos follower
-  tags:
-    - mesos
-
-- name: create directory for mesos-slave drop-in unit file
+- name: create directory for mesos-slave drop-in service file
   sudo: yes
   file:
-    path: /etc/systemd/system/mesos-slave.d
+    path: /etc/systemd/system/mesos-slave.service.d
     state: directory
     mode: 0755
   tags:
     - mesos
 
-- name: configure mesos systemd unit for networking integration
+- name: configure mesos-slave for networking integration
   sudo: yes
   copy:
-    src: override.conf
-    dest: /etc/systemd/system/mesos-slave.d/override.conf
-  notify: restart mesos follower
+    src: docker.conf
+    dest: /etc/systemd/system/mesos-slave.d/docker.conf
+  notify:
+    - reload systemd
+    - restart mesos follower
   tags:
     - mesos
