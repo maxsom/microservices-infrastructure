@@ -1,0 +1,9 @@
+{
+  "service": {
+    "name": "calico",
+    "check": {
+      "script": "/usr/local/bin/check-service-active calico",
+      "interval": "15s"
+    }
+  }
+}

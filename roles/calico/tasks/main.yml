@@ -47,6 +47,15 @@
   tags:
     - calico
 
+- name: register calico with consul
+  copy:
+    src: calico-service.json
+    dest: /etc/consul
+  notify:
+    - reload consul
+  tags:
+    - calico 
+
 # Before running this task make sure the OS_* variables have been sourced on your Ansible host
 - name: unlock neutron ports to allow calico traffic
   shell: roles/calico/files/neutron_port_update.py "{{ calico_network }}" "{{ hostvars[item].ansible_default_ipv4.macaddress }}"
@@ -92,15 +101,6 @@
 - name: create calico profile
   shell: calicoctl profile add "{{ calico_profile }}"
   when: check_result.stdout == ""
-  run_once: True
-  tags:
-    - calico
-
-- name: verify that profile has been created correctly
-  shell: calicoctl profile show|grep -w "{{ calico_profile }}"
-  register: command_result
-  changed_when: False
-  failed_when: command_result.stdout == ""
   run_once: True
   tags:
     - calico
