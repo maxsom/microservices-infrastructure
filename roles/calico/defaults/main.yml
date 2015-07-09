@@ -6,7 +6,10 @@ calico_image_tag: v0.4.8
 
 calico_binary: "{{ baseurl }}/releases/download/{{ calico_image_tag }}/calicoctl"
 
-etcd_service_name: etcd.service.consul
+# Should be replaced with etcd.service.consul when we upgrade to Calico v0.5.0.
+# Right now it can't resolve DNS from Consul. We can't start using 
+# the latest Calico version as it utilizes some experimental Docker features.
+etcd_service_name: 127.0.0.1
 etcd_client_port: 2379
 
 calico_etcdaddr: "{{ etcd_service_name }}:{{ etcd_client_port }}"
