@@ -1,6 +1,10 @@
 ---
+baseurl: https://github.com/Metaswitch/calico-docker
+
 calico_image: calico/node
 calico_image_tag: v0.5.0
+
+calico_binary: "{{ baseurl }}/releases/download/{{ calico_image_tag }}/calicoctl"
 
 etcd_service_name: etcd.service.consul
 etcd_client_port: 2379

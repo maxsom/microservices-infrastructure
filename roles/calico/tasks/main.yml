@@ -28,7 +28,7 @@
 
 - name: download calico binary
   get_url:
-    url: http://projectcalico.org/latest/calicoctl
+    url: "{{ calico_binary }}"
     dest: /usr/bin
     mode: 0755
   tags:
