@@ -3,13 +3,11 @@
     "name": "etcd",
     "checks": [
       {
-        "id": "chk1",
         "name": "service-active",
         "script": "/usr/local/bin/check-service-active etcd",
         "interval": "15s"
       },
       {   
-        "id": "chk2",
         "name": "member-active",
         "script": "/usr/local/bin/check-etcd-member",
         "interval": "15s"
