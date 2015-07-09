@@ -1,6 +1,6 @@
 ---
 calico_image: calico/node
-calico_image_tag: v0.4.8
+calico_image_tag: v0.5.0
 
 etcd_service_name: etcd.service.consul
 etcd_client_port: 2379
