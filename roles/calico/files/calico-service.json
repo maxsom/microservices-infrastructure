@@ -1,9 +1,19 @@
 {
   "service": {
     "name": "calico",
-    "check": {
-      "script": "/usr/local/bin/check-service-active calico",
-      "interval": "15s"
-    }
+    "checks": [
+      {
+        "id": "chk1",
+        "name": "service-active",
+        "script": "/usr/local/bin/check-service-active calico",
+        "interval": "15s"
+      },
+      {
+        "id": "chk2",
+        "name": "node-running",
+        "script": "/usr/local/bin/check-calico-node",
+        "interval": "15s"
+      }
+    ]
   }
 }

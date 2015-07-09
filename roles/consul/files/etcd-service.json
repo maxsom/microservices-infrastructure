@@ -4,13 +4,13 @@
     "checks": [
       {
         "id": "chk1",
-        "name": "service",
+        "name": "service-active",
         "script": "/usr/local/bin/check-service-active etcd",
         "interval": "15s"
       },
       {   
         "id": "chk2",
-        "name": "member",
+        "name": "member-active",
         "script": "/usr/local/bin/check-etcd-member",
         "interval": "15s"
       }
