@@ -1,9 +1,19 @@
 {
   "service": {
     "name": "etcd",
-    "check": {
-      "script": "/usr/local/bin/check-service-active etcd",
-      "interval": "15s"
-    }
+    "checks": [
+      {
+        "id": "chk1",
+        "name": "service",
+        "script": "/usr/local/bin/check-service-active etcd",
+        "interval": "15s"
+      },
+      {   
+        "id": "chk2",
+        "name": "member",
+        "script": "/usr/local/bin/check-etcd-member",
+        "interval": "15s"
+      }
+    ]
   }
 }
