@@ -99,6 +99,8 @@
 
 - name: check if calico profile already exists
   shell: calicoctl profile show|grep -w "{{ calico_profile }}"
+  environment:
+    ETCD_AUTHORITY: "{{ calico_etcdaddr }}"
   register: check_result
   changed_when: False
   failed_when: check_result.stderr
@@ -108,6 +110,8 @@
 
 - name: create calico profile
   shell: calicoctl profile add "{{ calico_profile }}"
+  environment:
+    ETCD_AUTHORITY: "{{ calico_etcdaddr }}"
   when: check_result.stdout == ""
   run_once: True
   tags:
