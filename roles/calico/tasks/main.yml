@@ -92,6 +92,8 @@
 
 - name: add calico ip-ip pool if required
   shell: calicoctl pool add "{{ calico_network }}" --ipip --nat-outgoing
+  environment:
+    ETCD_AUTHORITY: "{{ calico_etcdaddr }}"
   run_once: True
   when: provider != 'openstack'
   tags:
