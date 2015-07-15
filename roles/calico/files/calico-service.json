@@ -10,7 +10,7 @@
       },
       {
         "name": "node-running",
-        "script": "/usr/local/bin/check-calico-node",
+        "script": "/usr/local/bin/consul-check-calico-node",
         "interval": "15s",
         "timeout": "5s"
       }

@@ -10,7 +10,7 @@
       },
       {   
         "name": "member-active",
-        "script": "/usr/local/bin/check-etcd-member",
+        "script": "/usr/local/bin/consul-check-etcd-member",
         "interval": "15s",
         "timeout": "5s"
       }
