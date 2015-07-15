@@ -26,13 +26,22 @@
   tags:
     - calico
 
-- name: download calico binary
+- name: download calicoctl binary
   get_url:
     url: "{{ calico_binary }}"
     dest: /usr/bin
     mode: 0755
   tags:
     - calico
+    - bootstrap
+
+# We can't use Ansible docker module as there is no option to pull image
+# without starting it
+- name: ensure calico docker image is present
+  command: /usr/bin/docker pull {{ calico_image }}:{{ calico_image_tag }}
+  tags:
+    - calico
+    - bootstrap
 
 - name: generate systemd unit file
   template:
