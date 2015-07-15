@@ -27,3 +27,5 @@
     state: started
   tags:
     - etcd
+
+- meta: flush_handlers

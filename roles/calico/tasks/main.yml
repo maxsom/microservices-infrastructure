@@ -116,3 +116,5 @@
   run_once: True
   tags:
     - calico
+
+- meta: flush_handlers
