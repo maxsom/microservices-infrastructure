@@ -75,7 +75,7 @@
 
 # Before running this task make sure the OS_* variables have been sourced on your Ansible host
 - name: unlock neutron ports to allow calico traffic
-  shell: roles/calico/files/neutron_port_update.py "{{ calico_network }}" "{{ hostvars[item].ansible_default_ipv4.macaddress }}"
+  local_action: shell ./files/neutron_port_update.py "{{ calico_network }}" "{{ hostvars[item].ansible_default_ipv4.macaddress }}"
   environment:
     OS_USERNAME: "{{ lookup('env','OS_USERNAME') }}"
     OS_PASSWORD: "{{ lookup('env','OS_PASSWORD') }}"
@@ -84,7 +84,6 @@
   register: exit_code
   changed_when: exit_code.rc == 2
   failed_when: exit_code.rc == 1
-  delegate_to: localhost
   run_once: True
   when: hostvars[item].ansible_default_ipv4.address is defined and provider == 'openstack'
   with_items: groups['all']
