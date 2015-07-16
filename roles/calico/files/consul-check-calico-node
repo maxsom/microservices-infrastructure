@@ -1,10 +1,5 @@
 #!/usr/bin/env bash
 # Simple Consul script to check if Calico node is running
 
-is_running=$( calicoctl status | grep -o 'container is running' )
-
-if [ -z "$is_running" ]; then
-    exit 2
-fi
-
-exit 0
+echo | nc 127.0.0.1 2377 2>/dev/null
+exit $?
