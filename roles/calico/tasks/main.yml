@@ -99,6 +99,8 @@
   tags:
     - calico
 
+- meta: flush_handlers
+
 - name: add calico ip-ip pool if required
   shell: calicoctl pool add "{{ calico_network }}" --ipip --nat-outgoing
   environment:
@@ -127,5 +129,3 @@
   run_once: True
   tags:
     - calico
-
-- meta: flush_handlers
