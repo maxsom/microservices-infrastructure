@@ -4,12 +4,14 @@
     "checks": [
       {
         "name": "service-active",
+        "tags": [ "calico" ],
         "script": "/usr/local/bin/check-service-active calico",
         "interval": "15s",
         "timeout": "2s"
       },
       {
         "name": "node-running",
+        "tags": [ "calico" ],
         "script": "/usr/local/bin/consul-check-calico-node",
         "interval": "15s",
         "timeout": "5s"
