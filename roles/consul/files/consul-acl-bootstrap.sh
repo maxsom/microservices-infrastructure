@@ -6,4 +6,4 @@ MASTER_TOKEN="$1"
 AGENT_TOKEN="$2"
 
 curl -X PUT "http://localhost:8500/v1/acl/create?token=$MASTER_TOKEN" \
-    -d "{ \"ID\": \"$AGENT_TOKEN\", \"Name\": \"agent_policy\", \"Type\": \"client\", \"Rules\": \"service \\\"\\\" { policy = \\\"write\\\"}\"}"
+    -d "{ \"ID\": \"$AGENT_TOKEN\", \"Name\": \"agent_policy\", \"Type\": \"client\", \"Rules\": \"service \\\"\\\" { policy = \\\"write\\\"} key \\\"marathon\\\" { policy = \\\"deny\\\"} key \\\"vault\\\" { policy = \\\"deny\\\" } \"}"
