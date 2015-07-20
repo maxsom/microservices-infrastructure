@@ -34,6 +34,13 @@
   tags:
     - vault
 
+- name: create consul acl for vault
+  run_once: yes
+  sudo: yes
+  command: "curl -X PUT -d '{ \"ID\": \"{{ consul_acl_vault_token }}\", \"Name\": \"vault_acl\", \"Type\": \"client\", \"Rules\": \"key \\\"vault\\\" { policy = \\\"write\\\" }\"}' http://localhost:8500/v1/acl/create?token={{ consul_acl_master_token }}"
+  tags:
+    - vault
+
 - name: enable vault
   sudo: yes
   service:
