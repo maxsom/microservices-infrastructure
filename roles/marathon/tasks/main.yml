@@ -17,6 +17,13 @@
     - marathon
     - bootstrap
 
+- name: create consul acl for marathon
+  run_once: yes
+  sudo: yes
+  command: "curl -X PUT -d '{ \"ID\": \"{{ consul_acl_marathon_token }}\", \"Name\": \"marathon_acl\", \"Type\": \"client\", \"Rules\": \"key \\\"marathon\\\" { policy = \\\"write\\\" }\"}' http://localhost:8500/v1/acl/create?token={{ consul_acl_master_token }}"
+  tags:
+    - marathon
+
 - name: install wait script
   sudo: yes
   template:
