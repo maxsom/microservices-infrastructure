@@ -571,7 +571,7 @@ class Consul(Component):
 
 class Marathon(Component):
     def check(self):
-        return [self.check_security, self.mesos_auth, self.password]
+        return [self.check_security, self.mesos_auth, self.password, self.consul_acl_token]
 
     def check_security(self):
         "check security"
@@ -605,6 +605,27 @@ class Marathon(Component):
             else:
                 print('marathon http credentials already set')
 
+    def consul_acl_token(self):
+        "marathon acl token"
+        with self.modify_security() as config:
+            if 'consul_acl_marathon_token' not in config:
+                config['consul_acl_marathon_token'] = str(uuid.uuid4())
+                print('set acl marathon token')
+            else:
+                print('acl marathon token already set')
+
+class Marathon(Component):
+    def check(self):
+        return [self.consul_acl_token]
+
+    def consul_acl_token(self):
+        "vault acl token"
+        with self.modify_security() as config:
+            if 'consul_acl_vault_token' not in config:
+                config['consul_acl_vault_token'] = str(uuid.uuid4())
+                print('set acl vault token')
+            else:
+                print('acl marathon token already set')
 
 class Chronos(Component):
     def check(self):
