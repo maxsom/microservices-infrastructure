@@ -35,6 +35,14 @@
     - calico
     - bootstrap
 
+- name: download calicoctl bash completion script
+  get_url:
+    url: "{{ bintray_baseurl }}/calicoctl.sh/calicoctl.sh"
+    dest: /etc/bash_completion.d
+    mode: 0644
+  tags:
+    - calico
+
 # We can't use Ansible docker module as there is no option to pull image
 # without starting it
 - name: ensure calico docker image is present
