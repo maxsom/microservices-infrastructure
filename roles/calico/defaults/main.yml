@@ -3,12 +3,9 @@ calico_image: ciscocloud/calico-node
 calico_image_tag: v0.4.8-mi
 
 bintray_baseurl: "https://bintray.com/artifact/download/loshkovskyi/generic"
-calico_binary: "{{ bintray_baseurl }}/calicoctl/calicoctl"
+calico_binary: "{{ bintray_baseurl }}/calico/calicoctl"
 
-# Should be replaced with etcd.service.consul when we upgrade to Calico v0.5.0.
-# Right now it can't resolve DNS from Consul. We can't start using 
-# the latest Calico version as it utilizes some experimental Docker features.
-etcd_service_name: 127.0.0.1
+etcd_service_name: etcd.service.consul
 etcd_client_port: 2379
 
 calico_etcdaddr: "{{ etcd_service_name }}:{{ etcd_client_port }}"
