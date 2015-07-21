@@ -1,4 +1,7 @@
 ---
+# calico-docker image with the following patches:
+# - Add basic Consul support
+# - Fix to convert ETCD_AUTHORITY to an IP address
 calico_image: ciscocloud/calico-node
 calico_image_tag: v0.4.8-mi
 
