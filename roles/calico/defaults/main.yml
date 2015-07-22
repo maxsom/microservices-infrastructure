@@ -1,7 +1,4 @@
 ---
-# calico-docker image with the following patches:
-# - Add basic Consul support
-# - Fix to convert ETCD_AUTHORITY to an IP address
 calico_image: ciscocloud/calico-node
 calico_image_tag: v0.4.8-mi
 
@@ -13,8 +10,6 @@ etcd_client_port: 2379
 
 calico_etcdaddr: "{{ etcd_service_name }}:{{ etcd_client_port }}"
 
-# Containers will be assigned IPs from this network range
 calico_network: 192.168.0.0/16
 
-# Containers are added to this profile for interconnectivity
 calico_profile: dev
