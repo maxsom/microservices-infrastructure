@@ -20,13 +20,13 @@ ExecStart=/usr/bin/docker run \
     --name {{ inventory_hostname }} \
     --listen-peer-urls http://0.0.0.0:{{ etcd_peer_port }} \
     --listen-client-urls http://0.0.0.0:{{ etcd_client_port }} \
-    --initial-advertise-peer-urls http://{{ ansible_default_ipv4.address }}:{{ etcd_peer_port }} \
+    --initial-advertise-peer-urls http://{{ inventory_hostname }}:{{ etcd_peer_port }} \
     --initial-cluster-state new \
-    --advertise-client-urls http://{{ ansible_default_ipv4.address }}:{{ etcd_client_port }} \
+    --advertise-client-urls http://{{ inventory_hostname }}:{{ etcd_client_port }} \
 {# Generate string like: 'member1=http://host1:port,member2=http://host2:port' #}
     --initial-cluster {% for item in groups['all'] -%}
                         {% if item != 'localhost' -%}
-                          {{ hostvars[item].inventory_hostname }}=http://{{ hostvars[item].ansible_default_ipv4.address }}:{{ etcd_peer_port }}
+                          {{ hostvars[item].inventory_hostname }}=http://{{ hostvars[item].inventory_hostname }}:{{ etcd_peer_port }}
                           {%- if not loop.last %},{% endif -%}
                         {%- endif -%}
                       {% endfor %}
