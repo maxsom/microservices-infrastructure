@@ -81,10 +81,17 @@
   tags:
     - calico 
 
-# Before running this task make sure the OS_* variables have been sourced on your Ansible host
-# Probably, we will add this functionality to Terraform in the future.
+- name: copy the neutron port update script
+  copy:
+    src: neutron_port_update.py
+    dest: /usr/local/bin
+    mode: 0755
+  when: provider == 'openstack'
+  tags:
+    - calico
+
 - name: unlock neutron ports to allow calico traffic
-  local_action: shell ./files/neutron_port_update.py "{{ calico_network }}" "{{ hostvars[item].ansible_default_ipv4.macaddress }}"
+  shell: /usr/local/bin/neutron_port_update.py "{{ calico_network }}" "{{ hostvars[item].ansible_default_ipv4.macaddress }}"
   environment:
     OS_USERNAME: "{{ lookup('env','OS_USERNAME') }}"
     OS_PASSWORD: "{{ lookup('env','OS_PASSWORD') }}"
