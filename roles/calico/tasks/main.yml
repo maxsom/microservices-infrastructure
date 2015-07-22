@@ -43,8 +43,8 @@
   tags:
     - calico
 
-# We can't use Ansible docker module as there is no option to pull image
-# without starting it
+# We can't use the Ansible standard docker module as it always starts 
+# containers after image was pulled
 - name: ensure calico docker image is present
   command: /usr/bin/docker pull {{ calico_image }}:{{ calico_image_tag }}
   tags:
@@ -81,30 +81,8 @@
   tags:
     - calico 
 
-- name: copy the neutron port update script
-  copy:
-    src: neutron_port_update.py
-    dest: /usr/local/bin
-    mode: 0755
+- include: openstack.yml
   when: provider == 'openstack'
-  tags:
-    - calico
-
-- name: unlock neutron ports to allow calico traffic
-  shell: /usr/local/bin/neutron_port_update.py "{{ calico_network }}" "{{ hostvars[item].ansible_default_ipv4.macaddress }}"
-  environment:
-    OS_USERNAME: "{{ lookup('env','OS_USERNAME') }}"
-    OS_PASSWORD: "{{ lookup('env','OS_PASSWORD') }}"
-    OS_TENANT_NAME: "{{ lookup('env','OS_TENANT_NAME') }}"
-    OS_AUTH_URL: "{{ lookup('env','OS_AUTH_URL') }}"
-  register: exit_code
-  changed_when: exit_code.rc == 2
-  failed_when: exit_code.rc == 1
-  run_once: True
-  when: hostvars[item].ansible_default_ipv4.address is defined and provider == 'openstack'
-  with_items: groups['all']
-  tags:
-    - calico
 
 - name: enable and start calico
   service:
@@ -116,31 +94,4 @@
 
 - meta: flush_handlers
 
-- name: add calico ip-ip pool if required
-  shell: calicoctl pool add "{{ calico_network }}" --ipip --nat-outgoing
-  environment:
-    ETCD_AUTHORITY: "{{ calico_etcdaddr }}"
-  run_once: True
-  when: provider != 'openstack'
-  tags:
-    - calico
-
-- name: check if calico profile already exists
-  shell: calicoctl profile show|grep -w "{{ calico_profile }}"
-  environment:
-    ETCD_AUTHORITY: "{{ calico_etcdaddr }}"
-  register: check_result
-  changed_when: False
-  failed_when: check_result.stderr
-  run_once: True
-  tags:
-    - calico
-
-- name: create calico profile
-  shell: calicoctl profile add "{{ calico_profile }}"
-  environment:
-    ETCD_AUTHORITY: "{{ calico_etcdaddr }}"
-  when: check_result.stdout == ""
-  run_once: True
-  tags:
-    - calico
+- include: calico-configure.yml
