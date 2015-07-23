@@ -114,3 +114,24 @@
   tags:
     - mesos
     - collectd
+
+- name: create directory for mesos-slave drop-in service file
+  sudo: yes
+  file:
+    path: /etc/systemd/system/mesos-slave.service.d
+    state: directory
+    mode: 0755
+  tags:
+    - mesos
+
+- name: configure mesos-slave for networking integration
+  sudo: yes
+  copy:
+    src: docker.conf
+    dest: /etc/systemd/system/mesos-slave.service.d/docker.conf
+    mode: 0644
+  notify:
+    - reload systemd
+    - restart mesos follower
+  tags:
+    - mesos

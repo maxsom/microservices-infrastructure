@@ -1,0 +1,5 @@
+---
+- name: restart calico
+  service:
+    name: calico
+    state: restarted
