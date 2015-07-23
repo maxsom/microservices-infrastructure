@@ -11,6 +11,7 @@ which can be customized, generally using Ansible variables.
    consul.rst
    dnsmasq.rst
    docker.rst
+   etcd.rst
    haproxy.rst
    logstash.rst
    marathon.rst

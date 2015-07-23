@@ -41,11 +41,14 @@
   tags:
     - consul
 
-- name: register docker with consul
+- name: register services with consul
   sudo: yes
   copy:
-    src: docker-service.json
+    src: "{{ item.src }}"
     dest: /etc/consul
+  with_items:
+    - src: docker-service.json
+    - src: etcd-service.json
   notify:
     - reload consul
   tags:

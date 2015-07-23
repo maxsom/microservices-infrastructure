@@ -19,6 +19,7 @@
 # `roles/` directory, or by checking the online documentation at
 # microservices-infrastructure.readthedocs.org.
 - hosts: all
+  sudo: yes
   vars:
     # consul_acl_datacenter should be set to the datacenter you want to control
     # Consul ACLs. If you only have one datacenter, set it to that or remove
@@ -36,6 +37,7 @@
     - logrotate
     - consul-template
     - docker
+    - etcd
     - logstash
     - nginx
     - consul
